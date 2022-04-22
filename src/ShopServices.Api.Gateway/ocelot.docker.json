@@ -1,0 +1,94 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/Publicacao",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "livro-api",                //Docker
+          "Port": "80"                        //Docker
+        }
+      ],
+      "UpstreamPathTemplate": "/Publicacao",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT" ],
+      "Key": "TodosLivros"
+    },
+    {
+      "DownstreamPathTemplate": "/api/Publicacao/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "livro-api",                //Docker
+          "Port": "80"                        //Docker
+        }
+      ],
+      "UpstreamPathTemplate": "/Publicacao/{id}",
+      "UpstreamHttpMethod": [ "GET", "DELETE" ],
+      "DelegatingHandlers": [
+        "LivroHandler"
+      ]
+    },
+    //Autor
+    {
+      "DownstreamPathTemplate": "/api/Autor",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "autor-api",                //Docker
+          "Port": "80"                        //Docker
+        }
+      ],
+      "UpstreamPathTemplate": "/Autor",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT" ],
+      "Key": "TodosAutores"
+    },
+    {
+      "DownstreamPathTemplate": "/api/Autor/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "autor-api",                //Docker
+          "Port": "80"                        //Docker
+        }
+      ],
+      "UpstreamPathTemplate": "/Autor/{id}",
+      "UpstreamHttpMethod": [ "GET", "DELETE" ]
+    },
+    //Carrinho
+    {
+      "DownstreamPathTemplate": "/api/CarrinhoCompra",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "carrinho-api",           //Docker
+          "Port": "80"                      //Docker
+        }
+      ],
+      "UpstreamPathTemplate": "/CarrinhoCompra",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/CarrinhoCompra/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        { 
+          "Host": "carrinho-api",           //Docker
+          "Port": "80"                      //Docker
+        }
+      ],
+      "UpstreamPathTemplate": "/CarrinhoCompra/{id}",
+      "UpstreamHttpMethod": [ "GET", "DELETE" ]
+    }
+
+  ],
+  "Aggregates": [
+    {
+      "RouteKeys": [
+        "TodosLivros",
+        "TodosAutores"
+      ],
+      "UpstreamPathTemplate": "/LivroAutor"
+    }
+  ]
+}
+

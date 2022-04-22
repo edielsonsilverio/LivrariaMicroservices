@@ -1,0 +1,304 @@
+{
+	"info": {
+		"_postman_id": "13bda2b0-3f8a-4b90-b735-accc9428ded0",
+		"name": "Curso MicroServiço Espanhol",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Autor",
+			"item": [
+				{
+					"name": "Adicionar Autor Livro",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n    \"nome\": \"Elaine\",\r\n    \"apelido\": \"Nane\",\r\n    \"dataNascimento\": \"2022-03-27T19:22:22.785Z\"\r\n }\r\n\r\n  ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:27598/api/Autor",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "27598",
+							"path": [
+								"api",
+								"Autor"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Lista de Autor",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:27598/api/Autor",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "27598",
+							"path": [
+								"api",
+								"Autor"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Pesquisar Autor Por Livro",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:27598/api/Autor/49f9e020-808d-4fd0-8ce8-2bd76a7ba199",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "27598",
+							"path": [
+								"api",
+								"Autor",
+								"49f9e020-808d-4fd0-8ce8-2bd76a7ba199"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Adicionar Autor Livro Vazio",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n    \"nome\": \"\",\r\n    \"apelido\": \"\",\r\n    \"dataNascimento\": \"2022-03-27T19:22:22.785Z\"\r\n }\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5123/api/Autor",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5123",
+							"path": [
+								"api",
+								"Autor"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Lista Autor Docker",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/Autor",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"Autor"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Publicacao",
+			"item": [
+				{
+					"name": "Lista de Publicação",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:31298/api/publicacao",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "31298",
+							"path": [
+								"api",
+								"publicacao"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Pesquisar Publicação por Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:31298/api/publicacao/db84bc00-0cb1-4bec-baed-17dcfec26f03",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "31298",
+							"path": [
+								"api",
+								"publicacao",
+								"db84bc00-0cb1-4bec-baed-17dcfec26f03"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Lista de Publicação Docker",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5100/api/publicacao",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5100",
+							"path": [
+								"api",
+								"publicacao"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Carrinho",
+			"item": [
+				{
+					"name": "Adicionar Carrinho",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"dataCadastro\": \"2022-03-31T10:31:44.557Z\",\r\n  \"produtos\": [\r\n    \"db84bc00-0cb1-4bec-baed-17dcfec26f03\",\r\n    \"189dd0ad-606a-472c-b1f8-3e764a21d297\",\r\n    \"60f033ca-8718-4a60-98d2-45c2e4d68b56\"\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:29556/api/carrinhocompra",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "29556",
+							"path": [
+								"api",
+								"carrinhocompra"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obter Carrinho Por Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:29556/api/carrinhocompra/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "29556",
+							"path": [
+								"api",
+								"carrinhocompra",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Adicionar Carrinho Docker",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"dataCadastro\": \"2022-03-31T10:31:44.557Z\",\r\n  \"produtos\": [\r\n    \"db84bc00-0cb1-4bec-baed-17dcfec26f03\",\r\n    \"189dd0ad-606a-472c-b1f8-3e764a21d297\",\r\n    \"60f033ca-8718-4a60-98d2-45c2e4d68b56\"\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5200/api/carrinhocompra",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5200",
+							"path": [
+								"api",
+								"carrinhocompra"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obter Carrinho Por Id Docker",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5200/api/carrinhocompra/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5200",
+							"path": [
+								"api",
+								"carrinhocompra",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

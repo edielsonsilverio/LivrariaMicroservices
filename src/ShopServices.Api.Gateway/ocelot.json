@@ -1,0 +1,94 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/Publicacao",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",              //Development
+          "Port": "31298"                   //Development
+        }
+      ],
+      "UpstreamPathTemplate": "/Publicacao",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT" ],
+      "Key": "TodosLivros"
+    },
+    {
+      "DownstreamPathTemplate": "/api/Publicacao/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",              //Development
+          "Port": "31298"                   //Development
+        }
+      ],
+      "UpstreamPathTemplate": "/Publicacao/{id}",
+      "UpstreamHttpMethod": [ "GET", "DELETE" ],
+      "DelegatingHandlers": [
+        "LivroHandler"
+      ]
+    },
+    //Autor
+    {
+      "DownstreamPathTemplate": "/api/Autor",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",              //Development
+          "Port": "27598"                   //Development
+        }
+      ],
+      "UpstreamPathTemplate": "/Autor",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT" ],
+      "Key": "TodosAutores"
+    },
+    {
+      "DownstreamPathTemplate": "/api/Autor/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost:27598",        //Development
+          "Port": "27598"                   //Development
+        }
+      ],
+      "UpstreamPathTemplate": "/Autor/{id}",
+      "UpstreamHttpMethod": [ "GET", "DELETE" ]
+    },
+    //Carrinho
+    {
+      "DownstreamPathTemplate": "/api/CarrinhoCompra",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",            //Development
+          "Port": "29556"                 //Development
+        }
+      ],
+      "UpstreamPathTemplate": "/CarrinhoCompra",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/CarrinhoCompra/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        { 
+          "Host": "localhost",            //Development
+          "Port": "29556"                 //Development
+        }
+      ],
+      "UpstreamPathTemplate": "/CarrinhoCompra/{id}",
+      "UpstreamHttpMethod": [ "GET", "DELETE" ]
+    }
+
+  ],
+  "Aggregates": [
+    {
+      "RouteKeys": [
+        "TodosLivros",
+        "TodosAutores"
+      ],
+      "UpstreamPathTemplate": "/LivroAutor"
+    }
+  ]
+}
+

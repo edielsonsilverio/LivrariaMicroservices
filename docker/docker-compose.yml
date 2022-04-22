@@ -1,0 +1,198 @@
+# OBSERVAÇÃO : Os dockerfile no .NET tem que ser executado pelo docker compose para funcinar com a estrutura atual para mais de uma projeto dentro da solução
+
+
+# A Docker Compose - deve sempre começar com a tag de versão.
+# Usamos '3.8' porque é a última versão.
+
+version: '3.8'
+
+# Você deve saber que o Docker Compose funciona com serviços.
+# 1 serviço = 1 contêiner.
+# Por exemplo, um serviço, um servidor, um cliente, um banco de dados...
+# Usamos a palavra-chave 'services' para começar a criar serviços.
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq-shop
+    tty: true
+    restart: always   
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    #environment:
+    #  RABBITMQ_DEFAULT_USER: "mensagem"
+    #  RABBITMQ_DEFAULT_PASS: "mensagem"
+    
+      
+# POSTGRES
+  # O nome do nosso serviço é "db"
+  # mas você pode usar o nome de sua escolha.
+  # Nota: Isso pode alterar um pouco os comandos que você vai usar.
+  db_postgres:
+
+    # Imagem oficial do Postgres do DockerHub (usamos a última versão)
+    image: postgres
+    container_name: docker_postgres
+    restart: always
+
+    # Por padrão, um banco de dados Postgres está sendo executado na porta 5432.
+    # Se quisermos acessar o banco de dados do nosso computador (fora do container),
+    # devemos compartilhar a porta com a porta do nosso computador.
+    # A sintaxe é [port we want in our machine]:[port we want to retrieve in the container]
+    # Nota: Você é livre para alterar a porta do seu computador,
+    # mas leve em consideração que isso vai mudar a forma
+    # você está se conectando ao seu banco de dados.     
+    ports:
+      - 15432:5432
+
+    environment:
+      POSTGRES_USER: postgres       # O usuário PostgreSQL (útil para se conectar ao banco de dados)
+      POSTGRES_PASSWORD: MeuDb@123  # A senha do PostgreSQL (útil para se conectar ao banco de dados)
+      POSTGRES_DB: DockerDb   # O banco de dados padrão PostgreSQL (criado automaticamente na primeira inicialização)
+
+    # A tag `volumes` nos permite compartilhar uma pasta com nosso container.
+    # Sua sintaxe é a seguinte: [caminho da pasta em nossa máquina]:[caminho da pasta para recuperar no container]
+    volumes:  
+    # Neste exemplo, compartilhamos a pasta `db-data` em nosso repositório raiz, com o caminho de dados padrão do PostgreSQL.
+    # Significa que toda vez que o repositório estiver modificando os dados dentro
+    # de `/var/lib/postgresql/data/`, automaticamente a mudança aparecerá em `db-data`.
+    # Você não precisa criar a pasta `db-data`. O Docker Compose fará isso por você.
+    - ./dbdata-postgres/:/var/lib/postgresql/data/
+
+  #SQL SERVER 
+  db_sql-server:
+    image: "mcr.microsoft.com/mssql/server"
+    container_name: docker_sqlserver
+    #build: 
+      #context: ../sql
+      #dockerfile: ./Dockerfile
+    restart: always   
+    networks:
+      - default
+    ports:
+      - 11433:1433
+    environment:
+      SA_PASSWORD: "MeuDb@123"
+      ACCEPT_EULA: "Y" 
+
+
+  #MySql       
+  db_mysql:
+    image: "mysql"
+    container_name: docker_mysql
+    restart: always
+    networks:
+      - default
+    environment:
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: MeuDb@123
+      MYSQL_ROOT_PASSWORD: MeuDb@123
+      MYSQL_DATABASE: DockerDb
+
+    ports:
+      - 13306:3306
+
+  #API AUTOR
+  api-autor:
+    image: autor-api:latest
+    container_name: autor-api
+    build:
+      context: ../src
+      dockerfile: ./ShopServices.Api.Autor/Dockerfile
+    restart: always
+    networks:
+      - default
+    environment: 
+      - ASPNETCORE_ENVIRONMENT=Production
+      # - ASPNETCORE_URLS=http://*:5000
+      # - ASPNETCORE_Kestrel__Certificates__Default__Password=nerdstore
+      # - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/nerdstore-certificate.pfx
+    ports:
+      - "5100:80"
+    # volumes:
+    #   - ./certs:/https:ro
+    depends_on:
+      - db_postgres
+
+  api-livro:
+    image: livro-api:latest
+    container_name: livro-api
+    build:
+      context: ../src
+      dockerfile: ./ShopServices.Api.Livro/Dockerfile
+    restart: always
+    networks:
+      - default
+    environment: 
+      - ASPNETCORE_ENVIRONMENT=Production
+      # - ASPNETCORE_URLS=http://*:5100
+    ports:
+      - 5200:80
+    depends_on:
+      - db_sql-server
+
+  api-carrinho:
+    image: carrinho-api:latest
+    container_name: carrinho-api
+    build:
+      context: ../src
+      dockerfile: ./ShopServices.Api.Carrinho/Dockerfile
+    restart: always
+    networks:
+      - default
+    environment: 
+      - ASPNETCORE_ENVIRONMENT=Production
+      # - ASPNETCORE_URLS=http://*:5200
+    ports:
+      - 5300:80
+    depends_on:
+      - db_mysql
+
+  api-gateway:
+    image: gateway-api:latest
+    container_name: gateway-api
+    build:
+      context: ../src
+      dockerfile: ./ShopServices.Api.Gateway/Dockerfile
+    restart: always
+    networks:
+      - default
+    environment: 
+      - ASPNETCORE_ENVIRONMENT=Production
+      # - ASPNETCORE_URLS=http://*:5200
+    ports:
+      - 5000:80
+    depends_on:
+      - api-carrinho
+      - api-livro
+      - api-autor
+
+networks:
+  default:
+    external:
+      name: microservicenet
+
+# volumes:
+#   dbdata-mysql:
+#   dbdata-postgres:
+#   dbdata-sqlserver:
+
+# docker-compose -f docker-compose.yml up -d
+
+# Criar rede externa
+# docker network create microservicenet
+
+# Instalar o Portainer
+# docker run -d -p 9000:9000 --name portainer --restart always -v /var/run/docker.sock:/var/run/docker.sock -v /home/virtual/Desenvolvimento/Portainer/data:/data portainer/portainer
+
+# Instalar o SqlServer no docker
+# docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=MeuDb@123" -p 14433:1433 --name docker-sqlserver --hostname docker-sql -d mcr.microsoft.com/mssql/server:2019-latest
+
+# Instalar o Postgres no docker
+# docker run --name docker-postgres -e POSTGRES_PASSWORD=MeuDb@123 -e POSTGRES_USER=postgres   -p 5442:5432 -v /data:/var/lib/postgresql/data -d postgres
+
+# Instalar o MySQl no docker
+# docker run -d -p 13306:3306 --name docker-mysql -e MYSQL_ROOT_PASSWORD=MeuDb@123 -e MYSQL_DATABASE=ShopCarrinho -e MYSQL_USER=admin -e MYSQL_PASSWORD=MeuDb@123 mysql:latest
+
+
